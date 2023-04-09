@@ -1,0 +1,53 @@
+version: "3.7"
+services:
+  zookeeper:
+    image: bitnami/zookeeper:latest
+    container_name: zookeeper
+    restart: always
+    ports:
+      - 2181:2181
+    environment:
+      ALLOW_ANONYMOUS_LOGIN: "yes"
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_SYNC_LIMIT: 2
+    volumes:
+      - /etc/localtime:/etc/localtime ## 挂载位置（kafka镜像和宿主机器之间时间保持一直）
+    networks:
+      - zk-kafka
+
+  kafka:
+    image: bitnami/kafka:latest
+    container_name: kafka
+    ports:
+      - 9092:9092
+    restart: always
+    environment:
+      # client 要访问的 broker 地址
+      KAFKA_ADVERTISED_HOST_NAME: 127.0.0.1
+      # 每个容器就是一个 broker，设置其对应的 ID
+      KAFKA_BROKER_ID: 1
+      # 通过端口连接 zookeeper
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      # kafka 监听器，告诉外部连接者要通过什么协议访问指定主机名和端口开放的 Kafka 服务。
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      # 外部网络只能获取到容器名称，在内外网络隔离情况下
+      # 通过名称是无法成功访问 kafka 的
+      # 因此需要通过绑定这个监听器能够让外部获取到的是 IP
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://127.0.0.1:9092
+      ALLOW_PLAINTEXT_LISTENER: yes
+      KAFKA_LOG_RETENTION_HOURS: 120
+      # Kafka默认使用-Xmx1G -Xms1G的JVM内存配置，
+      KAFKA_HEAP_OPTS: "-Xms512M -Xmx1G"
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    volumes:
+      - ./kafka:/kafka
+      ## 挂载位置（kafka镜像和宿主机器之间时间保持一直）
+      - /etc/localtime:/etc/localtime
+    depends_on:
+      - zookeeper
+    networks:
+      - zk-kafka
+networks:
+  zk-kafka:
+    driver: bridge

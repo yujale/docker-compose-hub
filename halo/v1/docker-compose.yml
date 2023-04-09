@@ -1,0 +1,49 @@
+version: "3.2"
+
+services:
+  halo_server:
+    image: halohub/halo:1.6.0
+    container_name: halo
+    restart: always
+    volumes:
+      - ./data:/root/.halo
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - "18090:8090"
+    environment:
+      - SERVER_PORT=8090
+      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=com.mysql.cj.jdbc.Driver
+      - SPRING_DATASOURCE_URL=jdbc:mysql://halo_mysql:3306/halodb?characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=admin
+      - SPRING_DATASOURCE_PASSWORD=admin
+      - HALO_ADMIN_PATH=haloAdmin
+      - HALO_CACHE=memory
+    deploy:
+      resources:
+        limits:
+          cpus: '0.75'
+          memory: 1536M
+  halo_mysql:
+    image: mysql/mysql-server:8.0.27
+    container_name: halo_mysql
+    restart: always
+    networks:
+      halo_network:
+    command: --default-authentication-plugin=mysql_native_password
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_general_ci
+      --explicit_defaults_for_timestamp=true
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./mysql:/var/lib/mysql
+      - ./mysqlBackup:/data/mysqlBackup
+    ports:
+      - "3306:3306"
+    environment:
+      # 请修改此密码，并对应修改上方 Halo 服务的 SPRING_DATASOURCE_PASSWORD 变量值
+      - MYSQL_ROOT_PASSWORD=admin
+      - MYSQL_DATABASE=halodb
+networks:
+  halo_network:
+    driver: bridge

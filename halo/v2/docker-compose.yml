@@ -1,0 +1,58 @@
+version: "3"
+
+services:
+  halo:
+    image: halohub/halo:2.4
+    container_name: halo2
+    restart: always
+    depends_on:
+      halodb:
+        condition: service_healthy
+    networks:
+      halo_network:
+    volumes:
+      - ./halo:/root/.halo2
+    ports:
+      - "8090:8090"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8090/actuator/health/readiness"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    command:
+      - --spring.r2dbc.url=r2dbc:pool:postgresql://halodb/halo
+      - --spring.r2dbc.username=halo
+      # PostgreSQL 的密码，请保证与下方 POSTGRES_PASSWORD 的变量值一致。
+      - --spring.r2dbc.password=halo
+      - --spring.sql.init.platform=postgresql
+      # 外部访问地址，请根据实际需要修改
+      - --halo.external-url=http://localhost:8090/
+      # 初始化的超级管理员用户名
+      - --halo.security.initializer.superadminusername=admin
+      # 初始化的超级管理员密码
+      - --halo.security.initializer.superadminpassword=admin104802
+
+  halodb:
+    image: postgres:15.1-alpine
+    container_name: halodb
+    restart: always
+    networks:
+      halo_network:
+    volumes:
+      - ./db:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: [ "CMD", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    environment:
+      - POSTGRES_PASSWORD=halo
+      - POSTGRES_USER=halo
+      - POSTGRES_DB=halo
+      - PGUSER=halo
+
+networks:
+  halo_network:

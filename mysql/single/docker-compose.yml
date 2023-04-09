@@ -1,0 +1,23 @@
+version: '3'
+services:
+  mysql:
+    image: mysql/mysql-server:8.0.27
+    restart: always
+    container_name: mysql
+    volumes:
+      - ./data:/var/lib/mysql     # 数据挂载
+      - ./config/my.cnf:/etc/my.cnf  # 配置挂载
+      - ./init:/docker-entrypoint-initdb.d/    # 初始化目录挂载,说明其他配置不应该数据初始化
+    ports:
+      - '3306:3306' #“宿主机端口号：容器内端口号”
+    environment:
+      MYSQL_ROOT_PASSWORD: "rootroot"
+      ADMIN_USER: "root" #当前容器用于拥有创建账号功能的数据库账号
+      ADMIN_PASSWORD: "rootroot"
+      TZ: "Asia/Shanghai" #解决时区问题
+    command:
+    -  "--max_connections=1000"
+    -  "--character-set-server=utf8mb4"
+    -  "--collation-server=utf8mb4_unicode_ci"
+    -  "--log-bin=mysql-bin"
+    -  "--default-authentication-plugin=mysql_native_password"

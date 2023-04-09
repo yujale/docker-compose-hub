@@ -3,8 +3,13 @@
 
 
 ## redis
-#/redis/cluster/*/data/
-#/redis/cluster/*/logs/
+/redis/cluster/*/data/*.aof
+/redis/cluster/*/data/*.rdb
+/redis/cluster/*/logs/.log
 /redis/single/data/*.aof
 /redis/single/data/*.rdb
 /redis/single/logs/*.log
+
+## mysql
+/mysql/single/data/*
+/mysql/cluster/*/data/*

@@ -1,0 +1,65 @@
+version: '3.7'
+
+services:
+  redis-master:
+    image: redis:6.2.8-alpine
+    container_name: redis-master
+    restart: always
+    ports:
+      - "6379:6379"
+    environment:
+      TZ: "Asia/Shanghai"
+    volumes:
+      # 映射配置文件和数据目录
+      - ./master/conf/redis.conf:/etc/redis/redis.conf
+      - ./master/data:/data
+      - ./master/logs:/logs
+    command: [ "redis-server", "/etc/redis/redis.conf" ]
+    privileged: true
+    networks:
+      - redis-cluster
+
+  redis-slave1:
+    image: redis:6.2.8-alpine
+    container_name: redis-slave1
+    restart: always
+    ports:
+      - "6380:6379"
+    environment:
+      TZ: "Asia/Shanghai"
+    volumes:
+      # 映射配置文件和数据目录
+      - ./slave1/conf/redis.conf:/etc/redis/redis.conf
+      - ./slave1/data:/data
+      - ./slave1/logs:/logs
+    command: [ "redis-server", "/etc/redis/redis.conf" ]
+    depends_on:
+      - redis-master
+    privileged: true
+    networks:
+      - redis-cluster
+
+  redis-slave2:
+    image: redis:6.2.8-alpine
+    container_name: redis-slave2
+    restart: always
+    ports:
+      - "6381:6379"
+    environment:
+      TZ: "Asia/Shanghai"
+    volumes:
+      # 映射配置文件和数据目录
+      - ./slave2/conf/redis.conf:/etc/redis/redis.conf
+      - ./slave2/data:/data
+      - ./slave2/logs:/logs
+    command: [ "redis-server", "/etc/redis/redis.conf" ]
+    depends_on:
+      - redis-master
+    privileged: true
+    networks:
+      - redis-cluster
+
+networks:
+  redis-cluster:
+    name: redis-cluster
+    driver: bridge

@@ -1,0 +1,30 @@
+version: '3.2'
+
+services:
+  redis:
+    image: redis:6.2.8-alpine
+    container_name: redis
+    restart: always
+    ports:
+      - "16379:6379"
+    environment:
+      TZ: "Asia/Shanghai"
+    volumes:
+      # 映射配置文件和数据目录
+      - ./conf/redis.conf:/etc/redis/redis.conf
+      - ./data:/data
+      - ./logs:/logs
+    command: ["redis-server", "/etc/redis/redis.conf" ]
+    privileged: true
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 500M
+    networks:
+      - redis-single
+
+networks:
+  redis-single:
+    driver: bridge
+

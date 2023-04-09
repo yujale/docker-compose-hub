@@ -1,2 +1,10 @@
 /.idea/
 
+
+
+## redis
+#/redis/cluster/*/data/
+#/redis/cluster/*/logs/
+/redis/single/data/*.aof
+/redis/single/data/*.rdb
+/redis/single/logs/*.log

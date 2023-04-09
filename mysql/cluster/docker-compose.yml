@@ -1,0 +1,94 @@
+version: '3'
+services:
+  mysql-master:
+    image: mysql/mysql-server:8.0.27
+    restart: always
+    container_name: mysql-master
+    volumes:
+      - ./master/data:/var/lib/mysql
+      - ./master/my.cnf:/etc/mysql/my.cnf
+      - ./master/init/:/docker-entrypoint-initdb.d/
+      - /etc/localtime:/etc/localtime
+    ports:
+      - '13306:3306' #“宿主机端口号：容器内端口号”
+    environment:
+      MYSQL_ROOT_PASSWORD: "rootroot"
+      MASTER_SYNC_USER: "sync_admin" #设置脚本中定义的用于同步的账号
+      MASTER_SYNC_PASSWORD: "rootroot" #设置脚本中定义的用于同步的密码
+      ADMIN_USER: "root" #当前容器用于拥有创建账号功能的数据库账号
+      ADMIN_PASSWORD: "rootroot"
+      ALLOW_HOST: "0.0.0.0" #允许同步账号的host地址
+      TZ: "Asia/Shanghai" #解决时区问题
+    command:
+      -  "--server-id=1"
+      -  "--default-authentication-plugin=mysql_native_password"
+      -  "--character-set-server=utf8mb4"
+      -  "--collation-server=utf8mb4_unicode_ci"
+      -  "--log-bin=mysql-bin"
+      -  "--sync_binlog=1"
+    networks:
+      - mysql-cluster
+  mysql-slave1:
+    image: mysql/mysql-server:8.0.27
+    restart: always
+    container_name: mysql-slave1
+    ports:
+      - '13307:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: "123456"
+      SLAVE_SYNC_USER: "sync_admin" #用于同步的账号，由master创建
+      SLAVE_SYNC_PASSWORD: "123456"
+      ADMIN_USER: "root"
+      ADMIN_PASSWORD: "123456"
+      MASTER_HOST: "10.10.10.10" #master地址，开启主从同步需要连接master
+      TZ: "Asia/Shanghai" #设置时区
+    command:
+      -  "--server-id=2"
+      -  "--default-authentication-plugin=mysql_native_password"
+      -  "--character-set-server=utf8mb4"
+      -  "--collation-server=utf8mb4_unicode_ci"
+      -  "--log-bin=mysql-bin"
+      -  "--sync_binlog=1"
+    networks:
+      - mysql-cluster
+    depends_on:
+      - mysql-master
+    volumes:
+      - ./slave1/data:/var/lib/mysql
+      - ./slave1/my.cnf:/etc/mysql/my.cnf
+      - ./slave1/init/:/docker-entrypoint-initdb.d/
+      - /etc/localtime:/etc/localtime
+  mysql-slave2:
+    image: mysql/mysql-server:8.0.27
+    restart: always
+    container_name: mysql-slave2
+    ports:
+      - '13308:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: "123456"
+      SLAVE_SYNC_USER: "sync_admin" #用于同步的账号，由master创建
+      SLAVE_SYNC_PASSWORD: "123456"
+      ADMIN_USER: "root"
+      ADMIN_PASSWORD: "123456"
+      MASTER_HOST: "10.10.10.10" #master地址，开启主从同步需要连接master
+      TZ: "Asia/Shanghai" #设置时区
+    command:
+      -  "--server-id=3"
+      -  "--default-authentication-plugin=mysql_native_password"
+      -  "--character-set-server=utf8mb4"
+      -  "--collation-server=utf8mb4_unicode_ci"
+      -  "--log-bin=mysql-bin"
+      -  "--sync_binlog=1"
+    networks:
+      - mysql-cluster
+    depends_on:
+      - mysql-master
+    volumes:
+      - ./slave2/data:/var/lib/mysql
+      - ./slave2/my.cnf:/etc/mysql/my.cnf
+      - ./slave2/init/:/docker-entrypoint-initdb.d/
+      - /etc/localtime:/etc/localtime
+networks:
+  mysql-cluster:
+    driver: bridge
+

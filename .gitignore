@@ -13,3 +13,5 @@
 ## mysql
 /mysql/single/data/*
 /mysql/cluster/*/data/*
+
+/es-kibana/es/*/

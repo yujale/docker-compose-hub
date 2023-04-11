@@ -1,0 +1,63 @@
+version: '3'
+
+services:
+  rabbitmq1:
+    image: rabbitmq:3.8-management-alpine
+    container_name: rabbitmq1
+    hostname: rabbitmq1
+    volumes:
+      - ./rabbitmq1/data:/var/lib/rabbitmq
+      - ./rabbitmq1/config:/etc/rabbitmq
+    environment:
+      RABBITMQ_ERLANG_COOKIE: "cluster_cookie"
+      RABBITMQ_NODENAME: "rabbit@rabbitmq1"
+      RABBITMQ_NODE_PORT: 5672
+      RABBITMQ_DIST_PORT: 25672
+      RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS: "-rabbitmqclusterer minimum_disk_nodes 2"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      rabbitmq-cluster:
+
+  rabbitmq2:
+    image: rabbitmq:3.8-management-alpine
+    container_name: rabbitmq2
+    hostname: rabbitmq2
+    volumes:
+      - ./rabbitmq2/data:/var/lib/rabbitmq
+      - ./rabbitmq2/config:/etc/rabbitmq
+    environment:
+      RABBITMQ_ERLANG_COOKIE: "cluster_cookie"
+      RABBITMQ_NODENAME: "rabbit@rabbitmq2"
+      RABBITMQ_NODE_PORT: 5672
+      RABBITMQ_DIST_PORT: 25672
+      RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS: "-rabbitmqclusterer minimum_disk_nodes 2"
+    ports:
+      - "5673:5672"
+      - "15673:15672"
+    networks:
+      rabbitmq-cluster:
+
+  rabbitmq3:
+    image: rabbitmq:3.8-management-alpine
+    container_name: rabbitmq3
+    hostname: rabbitmq3
+    volumes:
+      - ./rabbitmq3/data:/var/lib/rabbitmq
+      - ./rabbitmq3/config:/etc/rabbitmq
+    environment:
+      RABBITMQ_ERLANG_COOKIE: "cluster_cookie"
+      RABBITMQ_NODENAME: "rabbit@rabbitmq3"
+      RABBITMQ_NODE_PORT: 5672
+      RABBITMQ_DIST_PORT: 25672
+      RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS: "-rabbitmqclusterer minimum_disk_nodes 2"
+    ports:
+      - "5674:5672"
+      - "15674:15672"
+    networks:
+      rabbitmq-cluster:
+
+networks:
+  rabbitmq-cluster:
+    driver: bridge

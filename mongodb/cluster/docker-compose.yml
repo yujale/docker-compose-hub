@@ -1,0 +1,56 @@
+version: '3'
+
+services:
+  mongodb1:
+    image: mongo:latest
+    restart: always
+    command: mongod --replSet rs0 --bind_ip_all
+    ports:
+      - "27017:27017"
+    networks:
+      - mongo-cluster
+    volumes:
+      - ./mongodb1-data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+    hostname: mongodb1
+
+  mongodb2:
+    image: mongo:latest
+    restart: always
+    command: mongod --replSet rs0 --bind_ip_all
+    ports:
+      - "27018:27017"
+    networks:
+      - mongo-cluster
+    volumes:
+      - ./mongodb2-data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+    hostname: mongodb2
+
+  mongodb3:
+    image: mongo:latest
+    restart: always
+    command: mongod --replSet rs0 --bind_ip_all
+    ports:
+      - "27019:27017"
+    networks:
+      - mongo-cluster
+    volumes:
+      - ./mongodb3-data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+    hostname: mongodb3
+
+networks:
+  mongo-cluster:
+    driver: bridge
+
+volumes:
+  mongodb1-data:
+  mongodb2-data:
+  mongodb3-data:

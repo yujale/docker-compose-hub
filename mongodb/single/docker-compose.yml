@@ -1,0 +1,39 @@
+version: '3'
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./data:/data/db
+      - ./config:/data/configdb
+      - ./log:/data/log
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=123456
+      - TZ=Asia/Shanghai
+      - wiredTigerCacheSizeGB=1
+    command: mongod --bind_ip_all --auth --config /etc/mongod.conf
+    networks:
+      - mongodb-network
+
+  mongo-express:
+    image: mongo-express:latest
+    container_name: mongo-express
+    restart: always
+    ports:
+      - "8081:8081"
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongodb
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=admin
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=123456
+    depends_on:
+      - mongodb
+    networks:
+      - mongodb-network
+
+networks:
+  mongodb-network:
+    driver: bridge

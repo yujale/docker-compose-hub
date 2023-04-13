@@ -16,7 +16,7 @@ services:
       - "discovery.type=single-node" #以单一节点模式启动
       - "ES_JAVA_OPTS=-Xms1024m -Xmx1024m" #设置使用jvm内存大小
     networks:
-      - elk
+      - es-kibana
     deploy:
       resources:
         limits:
@@ -38,7 +38,7 @@ services:
       - I18N_LOCALE=zh-CN
       - "TZ=Asia/Shanghai"
     networks:
-      - elk
+      - es-kibana
     depends_on:
       - elasticsearch
     deploy:

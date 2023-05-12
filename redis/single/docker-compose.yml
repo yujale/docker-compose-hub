@@ -12,8 +12,8 @@ services:
     volumes:
       # 映射配置文件和数据目录
       - ./conf/redis.conf:/etc/redis/redis.conf
-      - ./data:/data
-      - ./logs:/logs
+#      - ./data:/data
+#      - ./logs:/logs
     command: ["redis-server", "/etc/redis/redis.conf" ]
     privileged: true
     deploy:

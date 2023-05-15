@@ -8,8 +8,6 @@ services:
       - "2181:2181"
     environment:
       TZ: Asia/Shanghai
-    volumes:
-      - ./zookeeper:/opt/zookeeper/conf
     networks:
       - zk-kafka
 
@@ -31,8 +29,6 @@ services:
       KAFKA_NUM_PARTITIONS: 3
       KAFKA_DELETE_RETENTION_MS: 1000
       Tz: Asia/Shanghai
-    volumes:
-        - ./kafka:/opt/kafka/config
     depends_on:
       - zookeeper
     networks:

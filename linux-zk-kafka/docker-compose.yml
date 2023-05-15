@@ -25,7 +25,7 @@ services:
     restart: always
     environment:
       # client 要访问的 broker 地址
-      KAFKA_ADVERTISED_HOST_NAME: 127.0.0.1
+      KAFKA_ADVERTISED_HOST_NAME: 124.222.245.253
       # 每个容器就是一个 broker，设置其对应的 ID
       KAFKA_BROKER_ID: 1
       # 通过端口连接 zookeeper
@@ -35,8 +35,7 @@ services:
       # 外部网络只能获取到容器名称，在内外网络隔离情况下
       # 通过名称是无法成功访问 kafka 的
       # 因此需要通过绑定这个监听器能够让外部获取到的是 IP
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://124.222.245.253:9092
-      ALLOW_PLAINTEXT_LISTENER: "yes"
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://127.0.0.1:9092
       KAFKA_LOG_RETENTION_HOURS: 120
       # Kafka默认使用-Xmx1G -Xms1G的JVM内存配置，
       KAFKA_HEAP_OPTS: "-Xms512M -Xmx1G"

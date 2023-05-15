@@ -34,6 +34,7 @@ services:
       KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://124.222.245.253:9092
       # 通过端口连接 zookeeper
       KAFKA_CFG_ZOOKEEPER_CONNECT: zookeeper:2181
+      ALLOW_PLAINTEXT_LISTENER: "yes"
       KAFKA_KRAFT_CLUSTER_ID: kafka-single-node
       KAFKA_LOG_RETENTION_HOURS: 120
       # Kafka默认使用-Xmx1G -Xms1G的JVM内存配置，

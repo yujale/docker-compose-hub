@@ -25,6 +25,7 @@ services:
       - "9092:9092"
     restart: always
     environment:
+      KAFKA_KRAFT_CLUSTER_ID: kafka-single-node
       # client 要访问的 broker 地址
       KAFKA_ADVERTISED_HOST_NAME: 124.222.245.253
       # 每个容器就是一个 broker，设置其对应的 ID

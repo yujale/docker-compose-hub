@@ -12,7 +12,8 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
       ZOOKEEPER_SYNC_LIMIT: 2
     volumes:
-      - /etc/localtime:/etc/localtime ## 挂载位置（kafka镜像和宿主机器之间时间保持一直）
+      ## 挂载位置（kafka镜像和宿主机器之间时间保持一直）
+      - /etc/localtime:/etc/localtime
     networks:
       - zk-kafka
 
@@ -34,14 +35,14 @@ services:
       # 外部网络只能获取到容器名称，在内外网络隔离情况下
       # 通过名称是无法成功访问 kafka 的
       # 因此需要通过绑定这个监听器能够让外部获取到的是 IP
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://127.0.0.1:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://124.222.245.253:9092
       ALLOW_PLAINTEXT_LISTENER: "yes"
       KAFKA_LOG_RETENTION_HOURS: 120
       # Kafka默认使用-Xmx1G -Xms1G的JVM内存配置，
       KAFKA_HEAP_OPTS: "-Xms512M -Xmx1G"
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     volumes:
-#      - ./kafka:/kafka
+      - ./kafka:/kafka
       ## 挂载位置（kafka镜像和宿主机器之间时间保持一直）
       - /etc/localtime:/etc/localtime
     depends_on:

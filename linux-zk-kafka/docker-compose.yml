@@ -41,6 +41,7 @@ services:
       # Kafka默认使用-Xmx1G -Xms1G的JVM内存配置，
       KAFKA_HEAP_OPTS: "-Xms512M -Xmx1G"
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      ALLOW_PLAINTEXT_LISTENER: "yes"
     volumes:
       ## 挂载位置（kafka镜像和宿主机器之间时间保持一直）
       - /etc/localtime:/etc/localtime

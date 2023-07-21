@@ -8,7 +8,7 @@ services:
     restart: always
     container_name: wordpress
     environment:
-      WORDPRESS_DB_HOST: 10.0.4.2:3306
+      WORDPRESS_DB_HOST: 172.17.0.1:13306
       WORDPRESS_DB_USER: root
       WORDPRESS_DB_PASSWORD: rootroot
       WORDPRESS_DB_NAME: wordpress

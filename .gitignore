@@ -14,4 +14,4 @@
 /mysql/single/data/*
 /mysql/cluster/*/data/*
 
-/es-kibana/es/*/
+/es-kibana/7.0/single/es/

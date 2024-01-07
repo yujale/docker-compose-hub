@@ -2,13 +2,13 @@ version: '3.2'
 
 services:
   elasticsearch:
+    container_name: elasticsearch
     image: elasticsearch:7.17.4
     volumes:
       - ./es/plugins:/usr/share/elasticsearch/plugins #插件文件挂载
       - ./es/data:/usr/share/elasticsearch/data #数据文件挂载
     ports:
-      - "9200:9200"
-    container_name: elasticsearch
+      - "19200:9200"
     restart: always
     environment:
       - "TZ=Asia/Shanghai"
@@ -17,11 +17,6 @@ services:
       - "ES_JAVA_OPTS=-Xms1024m -Xmx1024m" #设置使用jvm内存大小
     networks:
       - es-kibana
-    deploy:
-      resources:
-        limits:
-          cpus: '0.75'
-          memory: 4096M
 
   kibana:
     image: kibana:7.17.4
@@ -30,22 +25,19 @@ services:
     volumes:
       - ./kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml
     ports:
-      - "5601:5601"
+      - "15601:5601"
+    depends_on:
+      - elasticsearch
     links:
       - elasticsearch:es #可以用es这个域名访问elasticsearch服务
     environment:
-      - ELASTICSEARCH_URL=http://elasticsearch:9200 #设置访问elasticsearch的地址
-      - I18N_LOCALE=zh-CN
+      - "ELASTICSEARCH_URL=http://elasticsearch:19200" #设置访问elasticsearch的地址
+      - "I18N_LOCALE=zh-CN"
       - "TZ=Asia/Shanghai"
+      - "elasticsearch.hosts=http://elasticsearch:19200"
     networks:
       - es-kibana
-    depends_on:
-      - elasticsearch
-    deploy:
-      resources:
-        limits:
-          cpus: '0.75'
-          memory: 1024M
+
 
 networks:
   es-kibana:

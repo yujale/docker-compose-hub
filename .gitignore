@@ -19,3 +19,5 @@
 /es-kibana/7.0/cluster/es02/*
 /es-kibana/7.0/cluster/es03/*
 
+/es-kibana/8.0/single/es
+/es-kibana/8.0/single/kibana/

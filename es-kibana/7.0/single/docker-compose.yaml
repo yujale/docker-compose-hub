@@ -41,7 +41,7 @@ services:
 
 
 networks:
-  es-kibana:
+  es-kibana-single:
     driver: bridge
       #  ik 分词器的安装
 

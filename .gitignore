@@ -15,3 +15,7 @@
 /mysql/cluster/*/data/*
 
 /es-kibana/7.0/single/es/
+/es-kibana/7.0/cluster/es01/*
+/es-kibana/7.0/cluster/es02/*
+/es-kibana/7.0/cluster/es03/*
+

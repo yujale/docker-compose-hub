@@ -1,0 +1,104 @@
+version: '3.8'
+
+services:
+  elasticsearch01:
+    container_name: elasticsearch01
+    image: elasticsearch:7.17.4
+    restart: always
+    ports:
+      - "9201:9200"
+    privileged: true
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    environment:
+      - "TZ=Asia/Shanghai"
+      - "node.name=elasticsearch01"              # 节点名称
+      - "cluster.name=es-docker-cluster"      # 集群名称
+      - "discovery.seed_hosts=elasticsearch02,elasticsearch03"       # 其它节点
+      - "cluster.initial_master_nodes=elasticsearch01,elasticsearch02,elasticsearch03"      # 配置一个或多个节点, 用于在es集群初始化时选举主节点master
+      - "bootstrap.memory_lock=true"      # 锁定内存地址
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"       # 设置java堆内存大小
+    volumes:
+      - ./es01/plugins:/usr/share/elasticsearch/plugins #插件文件挂载
+      - ./es01/data:/usr/share/elasticsearch/data #数据文件挂载
+      - ./es01/log:/usr/share/elasticsearch/logs #es 日志挂载
+    networks:
+      - es-kibana-cluster
+  elasticsearch02:
+    container_name: elasticsearch02
+    image: elasticsearch:7.17.4
+    restart: always
+    ports:
+      - "9202:9200"
+    privileged: true
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    environment:
+      - "TZ=Asia/Shanghai"
+      - "node.name=elasticsearch02"
+      - "cluster.name=es-docker-cluster"
+      - "discovery.seed_hosts=elasticsearch01,elasticsearch03"
+      - "cluster.initial_master_nodes=elasticsearch01,elasticsearch02,elasticsearch03"
+      - "bootstrap.memory_lock=true"
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    volumes:
+      - ./es02/plugins:/usr/share/elasticsearch/plugins #插件文件挂载
+      - ./es02/data:/usr/share/elasticsearch/data #数据文件挂载
+      - ./es02/log:/usr/share/elasticsearch/logs #es 日志挂载
+    networks:
+      - es-kibana-cluster
+  elasticsearch03:
+    container_name: elasticsearch03
+    image: elasticsearch:7.17.4
+    restart: always
+    ports:
+      - "9203:9200"
+    privileged: true
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    environment:
+      - "TZ=Asia/Shanghai"
+      - "node.name=elasticsearch03"
+      - "cluster.name=es-docker-cluster"
+      - "discovery.seed_hosts=elasticsearch01,elasticsearch02"
+      - "cluster.initial_master_nodes=elasticsearch01,elasticsearch02,elasticsearch03"
+      - "bootstrap.memory_lock=true"
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    volumes:
+      - ./es03/plugins:/usr/share/elasticsearch/plugins #插件文件挂载
+      - ./es03/data:/usr/share/elasticsearch/data #数据文件挂载
+      - ./es03/log:/usr/share/elasticsearch/logs #es 日志挂载
+    networks:
+      - es-kibana-cluster
+
+  kibana:
+    depends_on: 
+      - elasticsearch01
+      - elasticsearch02
+      - elasticsearch03
+    image: kibana:7.17.4
+    container_name: kibana-cluster
+    restart: always
+    ports:
+      - 5601:5601
+    volumes:
+      - ./kibana/kibana.yml:/usr/share/kibana/config/kibana.yml
+    links:
+      - elasticsearch01:es01 #可以用es这个域名访问elasticsearch服务
+    environment:
+      - "ELASTICSEARCH_URL=http://elasticsearch01:9201" #设置访问elasticsearch的地址
+      - "I18N_LOCALE=zh-CN"
+      - "TZ=Asia/Shanghai"
+      - elasticsearch.hosts=http://elasticsearch01:9201
+    networks:
+      - es-kibana-cluster
+
+networks:
+  es-kibana-cluster:
+    driver: bridge

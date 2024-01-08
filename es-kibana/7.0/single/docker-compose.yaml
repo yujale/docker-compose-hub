@@ -7,6 +7,7 @@ services:
     volumes:
       - ./es/plugins:/usr/share/elasticsearch/plugins #插件文件挂载
       - ./es/data:/usr/share/elasticsearch/data #数据文件挂载
+      - ./es/log:/usr/share/elasticsearch/logs #es 日志挂载
     ports:
       - "19200:9200"
     restart: always
@@ -36,7 +37,7 @@ services:
       - "TZ=Asia/Shanghai"
       - "elasticsearch.hosts=http://elasticsearch:19200"
     networks:
-      - es-kibana
+      - es-kibana-single
 
 
 networks:

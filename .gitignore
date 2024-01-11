@@ -14,10 +14,10 @@
 /mysql/single/data/*
 /mysql/cluster/*/data/*
 
-/es-kibana/7.0/single/es/
-/es-kibana/7.0/cluster/es01/*
-/es-kibana/7.0/cluster/es02/*
-/es-kibana/7.0/cluster/es03/*
+/es-kibana/v7/single/es/
+/es-kibana/v7/cluster/es01/*
+/es-kibana/v7/cluster/es02/*
+/es-kibana/v7/cluster/es03/*
 
-/es-kibana/8.0/single/es
-/es-kibana/8.0/single/kibana/
+/es-kibana/v8/single/es
+/es-kibana/v8/single/kibana/

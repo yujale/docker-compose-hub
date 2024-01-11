@@ -1,0 +1,23 @@
+version: '3.5'
+
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:${STACK_VERSION}
+    restart: always
+    ports:
+      - ${PGSQL_PORT}:5432
+    environment:
+      - TZ=Asia/Shanghai
+      - PGDATA=/data/postgres
+      - POSTGRES_USER=${PG_USERNAME}
+      - POSTGRES_PASSWORD=${PG_PASSWORD}
+    volumes:
+      - ./data:/data/postgres
+    networks:
+      - postgres-single
+    privileged: true
+
+networks:
+  postgres-single:
+    driver: bridge

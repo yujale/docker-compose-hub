@@ -2,11 +2,11 @@ version: '3.2'
 
 services:
   redis:
-    image: redis:6.2.8-alpine
+    image: redis:${REDIS_VERSION}
     container_name: redis
     restart: always
     ports:
-      - "16379:6379"
+      - ${REDIS_PORT}:6379
     environment:
       TZ: "Asia/Shanghai"
     volumes:

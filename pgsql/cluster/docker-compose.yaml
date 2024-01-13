@@ -1,7 +1,7 @@
 version: '3.5'
 services:
   pg-master:
-    image: bitnami/postgresql-repmgr:${STACK_VERSION}
+    image: bitnami/postgresql-repmgr:${PGSQL_REPMGR}
     ports:
       - ${PG_POOR_PORT_MASTER}:5432
     volumes:
@@ -11,17 +11,17 @@ services:
       - POSTGRESQL_POSTGRES_PASSWORD=${PG_PASSWORD} # 对应postgres用户的密码
       - POSTGRESQL_PASSWORD=${PG_PASSWORD} # 自定义数据库用户密码
       - POSTGRESQL_DATABASE=ha # 初始化数据库
-      - POSTGRESQL_NUM_SYNCHRONOUS_REPLICAS=1 # replicas数量，你可以启动多个replica，跟nodes保持一致
+      - POSTGRESQL_NUM_SYNCHRONOUS_REPLICAS=1 # replicas 数量，你可以启动多个replica，跟nodes保持一致
       - REPMGR_PRIMARY_HOST=pg-master # 主数据库
       - REPMGR_PARTNER_NODES=pg-salve,pg-master # 集群中数据库的节点
-      - REPMGR_NODE_NAME=pg-master # 集群中数据库的标识
+      - REPMGR_NODE_NAME=pg-master-1 # 集群中数据库的标识
       - REPMGR_NODE_NETWORK_NAME=pg-master # 集群中数据库的网络标识
       - REPMGR_USERNAME=${REPMGR_USERNAME} # 做数据备份用的用户，这个image自带的，如果需要修改，需要修改pg_hba.conf，然后创建一个新的用户
       - REPMGR_PASSWORD=${REPMGR_PASSWORD} # 备份数据用户的密码，同上。
     networks:
         - postgres-cluster
   pg-salve:
-    image: bitnami/postgresql-repmgr:${STACK_VERSION}
+    image: bitnami/postgresql-repmgr:${PGSQL_REPMGR}
     ports:
       - ${PG_POOR_PORT_SLAVE}:5432
     volumes:
@@ -34,7 +34,7 @@ services:
       - POSTGRESQL_NUM_SYNCHRONOUS_REPLICAS=1
       - REPMGR_PRIMARY_HOST=pg-master
       - REPMGR_PARTNER_NODES=pg-master,pg-salve
-      - REPMGR_NODE_NAME=pg-salve
+      - REPMGR_NODE_NAME=pg-salve-1
       - REPMGR_NODE_NETWORK_NAME=pg-salve
       - REPMGR_USERNAME=${REPMGR_USERNAME} # 做数据备份用的用户，这个image自带的，如果需要修改，需要修改pg_hba.conf，然后创建一个新的用户
       - REPMGR_PASSWORD=${REPMGR_PASSWORD} # 备份数据用户的密码，同上。

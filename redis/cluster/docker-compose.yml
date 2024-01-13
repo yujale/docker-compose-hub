@@ -8,13 +8,15 @@ services:
     ports:
       - ${REDIS_MASTER_PORT}:6379
     environment:
-      TZ: "Asia/Shanghai"
+      - TZ=Asia/Shanghai
+      - REDIS_MASTER_PASSWORD=${REDIS_MASTER_PASSWORD}
+      - REDIS_MASTER_APPENDONLY=${REDIS_MASTER_APPENDONLY}
+      - REDIS_MASTER_BIND=${REDIS_MASTER_BIND}
+      - REDIS_MASTER_LOGLEVEL=${REDIS_MASTER_LOGLEVEL}
+    command: ["redis-server", "--appendonly", "${REDIS_MASTER_APPENDONLY}", "--requirepass", "${REDIS_MASTER_PASSWORD}","--bind", "${REDIS_MASTER_BIND}", "--loglevel", "${REDIS_MASTER_LOGLEVEL}"]
     volumes:
       # 映射配置文件和数据目录
-      - ./master/conf/redis.conf:/etc/redis/redis.conf
       - ./master/data:/data
-      - ./master/logs:/logs
-    command: [ "redis-server", "/etc/redis/redis.conf" ]
     privileged: true
     networks:
       - redis-cluster
@@ -26,19 +28,20 @@ services:
     ports:
       - ${REDIS_SLAVE1_PORT}:6379
     environment:
-      TZ: "Asia/Shanghai"
+      - TZ=Asia/Shanghai
+      - REDIS_MASTER_AUTH_PASSWORD=${REDIS_MASTER_AUTH_PASSWORD}
+      - REDIS_SLAVE1_APPENDONLY=${REDIS_SLAVE1_APPENDONLY}
+      - REDIS_SLAVE1_BIND=${REDIS_SLAVE1_BIND}
+      - REDIS_SLAVE1_LOGLEVEL=${REDIS_SLAVE1_LOGLEVEL}
     volumes:
       # 映射配置文件和数据目录
-      - ./slave1/conf/redis.conf:/etc/redis/redis.conf
       - ./slave1/data:/data
-      - ./slave1/logs:/logs
-    command: [ "redis-server", "/etc/redis/redis.conf" ]
+    command: ["redis-server", "--appendonly", "${REDIS_SLAVE1_APPENDONLY}","--slaveof", "redis-master", "6379","--masterauth","${REDIS_MASTER_AUTH_PASSWORD}","--bind", "${REDIS_SLAVE1_BIND}", "--loglevel", "${REDIS_SLAVE1_LOGLEVEL}"]
     depends_on:
       - redis-master
     privileged: true
     networks:
       - redis-cluster
-
   redis-slave2:
     image: redis:${REDIS_VERSION}
     container_name: redis-slave2
@@ -46,13 +49,15 @@ services:
     ports:
       - ${REDIS_SLAVE2_PORT}:6379
     environment:
-      TZ: "Asia/Shanghai"
+      - TZ=Asia/Shanghai
+      - REDIS_MASTER_AUTH_PASSWORD=${REDIS_MASTER_AUTH_PASSWORD}
+      - REDIS_SLAVE2_APPENDONLY=${REDIS_SLAVE1_APPENDONLY}
+      - REDIS_SLAVE2_BIND=${REDIS_SLAVE1_BIND}
+      - REDIS_SLAVE2_LOGLEVEL=${REDIS_SLAVE1_LOGLEVEL}
     volumes:
       # 映射配置文件和数据目录
-      - ./slave2/conf/redis.conf:/etc/redis/redis.conf
       - ./slave2/data:/data
-      - ./slave2/logs:/logs
-    command: [ "redis-server", "/etc/redis/redis.conf" ]
+    command: ["redis-server", "--appendonly", "${REDIS_SLAVE2_APPENDONLY}","--slaveof", "redis-master", "6379","--masterauth","${REDIS_MASTER_AUTH_PASSWORD}","--bind", "${REDIS_SLAVE2_BIND}", "--loglevel", "${REDIS_SLAVE2_LOGLEVEL}"]
     depends_on:
       - redis-master
     privileged: true

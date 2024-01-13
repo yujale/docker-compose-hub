@@ -22,3 +22,5 @@
 /es-kibana/v8/single/es
 /es-kibana/v8/single/kibana/
 /pgsql/single/data/
+/pgsql/cluster/pg_master_data/
+/pgsql/cluster/pg_salve_data/

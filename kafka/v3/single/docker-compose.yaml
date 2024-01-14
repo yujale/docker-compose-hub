@@ -5,7 +5,7 @@ services:
     image: bitnami/kafka:${KAFKA_VERSION}
     ports:
       - ${KAFKA_PORT}:9092
-      - 9094:9094
+      - 9094:9094 # 使用 9094 连接 Kafka
     container_name: kafka-v3
     restart: always
     environment:

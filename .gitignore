@@ -26,3 +26,4 @@
 /pgsql/cluster/pg_salve_data/
 /redis/cluster/*/logs/
 /kafka/v3/single/data/
+/kafka/v3/cluster/*/data/

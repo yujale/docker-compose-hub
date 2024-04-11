@@ -33,7 +33,7 @@ services:
       - "38080:8080"
     restart: always
     environment:
-      - KAFKA_CLUSTERS_0_NAME=local
+      - KAFKA_CLUSTERS_0_NAME=local-single
       - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9094  # 修改这里
       - KAFKA_CLUSTERS_0_READONLY=true
     depends_on:

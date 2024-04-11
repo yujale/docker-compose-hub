@@ -1,5 +1,5 @@
 version: "3.5"
-
+# https://github.com/bitnami/containers/blob/main/bitnami/kafka/README.md
 services:
   kafka-master:
     image: bitnami/kafka:${KAFKA_VERSION}
@@ -21,6 +21,10 @@ services:
       # 控制器使用的侦听器名称的逗号分隔列表。如果在 KRaft 模式下运行，这是必需的。没有默认值。
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
       - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
+      - KAFKA_CFG_OFFSETS_TOPIC_REPLICATION_FACTOR=3
+      - KAFKA_CFG_TRANSACTION_STATE_LOG_REPLICATION_FACTOR=3
+      - KAFKA_CFG_TRANSACTION_STATE_LOG_MIN_ISR=2
+      - TZ=Asia/Shanghai
     volumes:
       - ./master/data:/bitnami/kafka
     networks:
@@ -44,6 +48,10 @@ services:
       # 控制器使用的侦听器名称的逗号分隔列表。如果在 KRaft 模式下运行，这是必需的。没有默认值。
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
       - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
+      - KAFKA_CFG_OFFSETS_TOPIC_REPLICATION_FACTOR=3
+      - KAFKA_CFG_TRANSACTION_STATE_LOG_REPLICATION_FACTOR=3
+      - KAFKA_CFG_TRANSACTION_STATE_LOG_MIN_ISR=2
+      - TZ=Asia/Shanghai
     volumes:
       - ./node1/data:/bitnami/kafka
     networks:
@@ -67,6 +75,10 @@ services:
       # 控制器使用的侦听器名称的逗号分隔列表。如果在 KRaft 模式下运行，这是必需的。没有默认值。
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
       - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
+      - KAFKA_CFG_OFFSETS_TOPIC_REPLICATION_FACTOR=3
+      - KAFKA_CFG_TRANSACTION_STATE_LOG_REPLICATION_FACTOR=3
+      - KAFKA_CFG_TRANSACTION_STATE_LOG_MIN_ISR=2
+      - TZ=Asia/Shanghai
     volumes:
       - ./node2/data:/bitnami/kafka
     networks:

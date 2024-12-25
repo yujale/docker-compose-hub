@@ -27,3 +27,5 @@
 /redis/cluster/*/logs/
 /kafka/v3/single/data/
 /kafka/v3/cluster/*/data/
+/linux/soft/*
+/linux/*

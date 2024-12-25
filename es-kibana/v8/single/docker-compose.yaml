@@ -9,6 +9,7 @@ services:
       - ${ES_PORT}:9200
     restart: always
     environment:
+      - TZ=Asia/Shanghai
       - node.name=elasticsearch
       - cluster.name=${CLUSTER_NAME}
       - discovery.type=single-node

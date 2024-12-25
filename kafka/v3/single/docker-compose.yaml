@@ -14,8 +14,8 @@ services:
       - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093 # 以逗号分隔的 {id}@{host}:{port} 条目列表中的控制器仲裁投票者集的 id/端点信息映射。没有默认值。
       # Listeners
       # Kafka 监听器列表。如果节点设置了角色，则必须包含controller监听器。CONTROLLER 监听器是必需的。没有默认值。
-      - KAFKA_CFG_LISTENERS=PLAINTEXT://0.0.0.0:${KAFKA_PORT},CONTROLLER://0.0.0.0:9093,EXTERNAL://0.0.0.0:9094
-      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092,EXTERNAL://kafka:9094 # Kafka  advertised.listeners 配置覆盖。没有默认值。
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:9094
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092,EXTERNAL://localhost:9094 # Kafka  advertised.listeners 配置覆盖。没有默认值。
       # 使用 Apache Kafka 安全协议映射每个侦听器。如果节点设置了controller角色，则需要此设置才能为 CONTROLLER LISTENER. 例如：PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT。没有默认值。
       - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT
       # 控制器使用的侦听器名称的逗号分隔列表。如果在 KRaft 模式下运行，这是必需的。没有默认值。
@@ -34,7 +34,7 @@ services:
     restart: always
     environment:
       - KAFKA_CLUSTERS_0_NAME=local-single
-      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9094  # 修改这里
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092  # 修改这里
       - KAFKA_CLUSTERS_0_READONLY=true
     depends_on:
       - kafka

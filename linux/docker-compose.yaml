@@ -1,0 +1,32 @@
+version: "3.7"
+services:
+  node1:
+    image: centos:centos7
+    container_name: node1
+    command: tail -f /dev/null  # 保持容器运行
+    volumes:
+      - ./node1/soft:/soft
+    networks:
+      - linux_cluster
+
+  node2:
+    image: centos:centos7
+    container_name: node2
+    command: tail -f /dev/null  # 保持容器运行
+    volumes:
+      - ./node2/soft:/soft
+    networks:
+      - linux_cluster
+
+  node3:
+    image: centos:centos7
+    container_name: node3
+    command: tail -f /dev/null  # 保持容器运行
+    volumes:
+      - ./node3/soft:/soft
+    networks:
+      - linux_cluster
+
+networks:
+  linux_cluster:
+    driver: bridge

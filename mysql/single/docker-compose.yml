@@ -11,9 +11,9 @@ services:
     ports:
       - '13306:3306' #“宿主机端口号：容器内端口号”
     environment:
-      MYSQL_ROOT_PASSWORD: "rootroot"
+      MYSQL_ROOT_PASSWORD: "root104802"
       ADMIN_USER: "root" #当前容器用于拥有创建账号功能的数据库账号
-      ADMIN_PASSWORD: "rootroot"
+      ADMIN_PASSWORD: "root104802"
       TZ: "Asia/Shanghai" #解决时区问题
     command:
     -  "--max_connections=1000" # 将最大连接数设置为 1000。
